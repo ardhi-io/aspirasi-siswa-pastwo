@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aspirasi Siswa</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background:
+    radial-gradient(circle at 90% 10%, #173c68 0%, transparent 30%),
+    radial-gradient(circle at 10% 90%, #102d50 0%, transparent 30%),
+    #07182f;
+  color: #f5f8fc;
+}
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  min-height: 100vh;
+  margin: auto;
+  padding: 22px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  color: #91aac8;
+  font-size: 12px;
+}
+
+.logo {
+  color: white;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.progress-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress {
+  width: 70px;
+  height: 5px;
+  background: #1a3150;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  width: 0;
+  height: 100%;
+  background: #75aceb;
+  transition: .35s ease;
+}
+
+.slide {
+  display: none;
+  animation: appear .35s ease;
+}
+
+.slide.active {
+  display: block;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  background: rgba(12, 35, 66, .94);
+  border: 1px solid #1c3b60;
+  border-radius: 24px;
+  padding: 28px 23px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.3);
+}
+
+.icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  background: #122f53;
+  border: 1px solid #294c73;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  margin-bottom: 20px;
+}
+
+.small-title {
+  color: #75aceb;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+h1 {
+  font-size: 38px;
+  line-height: 1.1;
+  margin-bottom: 15px;
+}
+
+h2 {
+  font-size: 27px;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.desc {
+  color: #b9c9dc;
+  font-size: 14px;
+  line-height: 1.75;
+  margin-bottom: 22px;
+}
+
+.note {
+  border-left: 2px solid #75aceb;
+  padding-left: 13px;
+  color: #d4e0ed;
+  font-size: 13px;
+  line-height: 1.65;
+  margin-bottom: 22px;
+}
+
+label {
+  display: block;
+  color: #e3ebf5;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 9px;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #294966;
+  border-radius: 13px;
+  background: #081a33;
+  color: white;
+  outline: none;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #75aceb;
+  box-shadow: 0 0 0 3px rgba(117,172,235,.08);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #627b99;
+}
+
+textarea {
+  min-height: 150px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.option input {
+  display: none;
+}
+
+.option label {
+  cursor: pointer;
+  padding: 15px;
+  border: 1px solid #294966;
+  border-radius: 13px;
+  background: #081a33;
+  font-weight: normal;
+  transition: .2s;
+}
+
+.option input:checked + label {
+  background: #123b67;
+  border-color: #75aceb;
+}
+
+.counter {
+  text-align: right;
+  color: #617b99;
+  font-size: 11px;
+  margin-top: 7px;
+}
+
+.error {
+  display: none;
+  color: #ff9d9d;
+  font-size: 12px;
+  margin-top: 9px;
+}
+
+.error.show {
+  display: block;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+button {
+  border: none;
+  border-radius: 13px;
+  padding: 14px 18px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s;
+}
+
+button:active {
+  transform: scale(.97);
+}
+
+.back {
+  background: #172d49;
+  color: #c8d6e7;
+  min-width: 55px;
+}
+
+.next,
+.submit {
+  flex: 1;
+  color: white;
+  background: linear-gradient(135deg, #245d99, #3276b5);
+}
+
+.next:hover,
+.submit:hover {
+  opacity: .9;
+}
+
+.submit:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+.success {
+  text-align: center;
+}
+
+.success-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #123b67;
+  border: 1px solid #315c86;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 30px;
+}
+
+.footer {
+  text-align: center;
+  color: #617b99;
+  font-size: 10px;
+  margin-top: 17px;
+  line-height: 1.5;
+}
+
+@media(max-width:450px) {
+  .container {
+    padding: 18px 14px;
+  }
+
+  .card {
+    padding: 24px 19px;
+  }
+
+  h1 {
+    font-size: 34px;
+  }
+
+  h2 {
+    font-size: 25px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- TOP -->
+  <div class="top">
+
+    <div class="logo">
+      ✦ ASPIRASI SISWA
+    </div>
+
+    <div class="progress-area">
+
+      <span id="progressText">
+        1 / 5
+      </span>
+
+      <div class="progress">
+        <div
+          class="progress-bar"
+          id="progressBar">
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- SLIDE 1 -->
+  <div class="slide active">
+
+    <div class="card">
+
+      <div class="icon">
+        ✎
+      </div>
+
+      <div class="small-title">
+        Ruang Suara Siswa
+      </div>
+
+      <h1>
+        Aspirasi Siswa
+      </h1>
+
+      <p class="desc">
+        Selamat datang di ruang aspirasi siswa.
+        Suara kalian adalah bagian penting dalam
+        kemajuan sekolah.
+      </p>
+
+      <div class="note">
+        Sampaikan saran, kritik, keluhan, maupun ide
+        kalian dengan jujur, sopan, dan membangun.
+      </div>
+
+      <p class="desc">
+        Setiap aspirasi akan diterima dan dipertimbangkan
+        sebagai bahan evaluasi untuk menciptakan
+        lingkungan sekolah yang lebih baik.
+        <br><br>
+        <b>OSIS & MPK siap mendengarkan.</b>
+      </p>
+
+      <div class="buttons">
+
+        <button
+          type="button"
+          class="next"
+          onclick="nextSlide()">
+          Mulai Mengisi →
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- SLIDE 2 -->
+  <div class="slide">
+
+    <div class="card">
+
+      <div class="small-title">
+        Pertanyaan 01
+      </div>
+
+      <h2>
+        Siapa kamu?
+      </h2>
+
+      <p class="desc">
+        Kenalin dulu siapa yang menyampaikan
+        aspirasi ini.
+      </p>
+
+      <label for="nama">
+        Nama *
+      </label>
+
+      <input
+        type="text"
+        id="nama"
+        placeholder="Tulis nama kamu..."
+        autocomplete="name">
+
+      <div
+        class="error"
+        id="errorNama">
+        Nama belum diisi.
+      </div>
+
+      <div class="buttons">
+
+        <button
+          type="button"
+          class="back"
+          onclick="prevSlide()">
+          ←
+        </button>
+
+        <button
+          type="button"
+          class="next"
+          onclick="checkNama()">
+          Lanjut →
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- SLIDE 3 -->
+  <div class="slide">
+
+    <div class="card">
+
+      <div class="small-title">
+        Pertanyaan 02
+      </div>
+
+      <h2>
+        Kamu dari kelas mana?
+      </h2>
+
+      <p class="desc">
+        Masukkan kelas kamu supaya aspirasi lebih
+        mudah dipahami dan ditindaklanjuti.
+      </p>
+
+      <label for="kelas">
+        Kelas *
+      </label>
+
+      <input
+        type="text"
+        id="kelas"
+        placeholder="Contoh: XI RPL 1">
+
+      <div
+        class="error"
+        id="errorKelas">
+        Kelas belum diisi.
+      </div>
+
+      <div class="buttons">
+
+        <button
+          type="button"
+          class="back"
+          onclick="prevSlide()">
+          ←
+        </button>
+
+        <button
+          type="button"
+          class="next"
+          onclick="checkKelas()">
+          Lanjut →
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- SLIDE 4 -->
+  <div class="slide">
+
+    <div class="card">
+
+      <div class="small-title">
+        Pertanyaan 03
+      </div>
+
+      <h2>
+        Apa jenis aspirasinya?
+      </h2>
+
+      <p class="desc">
+        Pilih kategori yang paling sesuai dengan
+        apa yang ingin kamu sampaikan.
+      </p>
+
+      <div class="options">
+
+        <div class="option">
+
+          <input
+            type="radio"
+            name="jenis"
+            id="saran"
+            value="Saran">
+
+          <label for="saran">
+            Saran
+          </label>
+
+        </div>
+
+        <div class="option">
+
+          <input
+            type="radio"
+            name="jenis"
+            id="keluhan"
+            value="Keluhan">
+
+          <label for="keluhan">
+            Keluhan
+          </label>
+
+        </div>
+
+        <div class="option">
+
+          <input
+            type="radio"
+            name="jenis"
+            id="kritik"
+            value="Kritik">
+
+          <label for="kritik">
+            Kritik
+          </label>
+
+        </div>
+
+        <div class="option">
+
+          <input
+            type="radio"
+            name="jenis"
+            id="ide"
+            value="Ide Kegiatan">
+
+          <label for="ide">
+            Ide Kegiatan
+          </label>
+
+        </div>
+
+        <div class="option">
+
+          <input
+            type="radio"
+            name="jenis"
+            id="lainnya"
+            value="Lainnya">
+
+          <label for="lainnya">
+            Lainnya
+          </label>
+
+        </div>
+
+      </div>
+
+      <div
+        class="error"
+        id="errorJenis">
+        Pilih salah satu kategori terlebih dahulu.
+      </div>
+
+      <div class="buttons">
+
+        <button
+          type="button"
+          class="back"
+          onclick="prevSlide()">
+          ←
+        </button>
+
+        <button
+          type="button"
+          class="next"
+          onclick="checkJenis()">
+          Lanjut →
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- SLIDE 5 -->
+  <div class="slide">
+
+    <div class="card">
+
+      <div class="small-title">
+        Pertanyaan 04
+      </div>
+
+      <h2>
+        Apa yang ingin kamu sampaikan?
+      </h2>
+
+      <p class="desc">
+        Ceritakan dengan jelas. Mau memberikan saran,
+        kritik, keluhan, atau ide baru, semuanya boleh.
+      </p>
+
+      <label for="aspirasi">
+        Isi aspirasi *
+      </label>
+
+      <textarea
+        id="aspirasi"
+        maxlength="1000"
+        placeholder="Tulis aspirasi kamu di sini...">
+      </textarea>
+
+      <div class="counter">
+        <span id="counter">0</span> / 1000
+      </div>
+
+      <div
+        class="error"
+        id="errorAspirasi">
+        Isi aspirasi belum ditulis.
+      </div>
+
+      <div
+        class="error"
+        id="errorSubmit">
+        Gagal mengirim. Coba lagi.
+      </div>
+
+      <div class="buttons">
+
+        <button
+          type="button"
+          class="back"
+          onclick="prevSlide()">
+          ←
+        </button>
+
+        <button
+          type="button"
+          class="submit"
+          id="submitButton"
+          onclick="submitForm()">
+          Kirim Aspirasi ✓
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- SLIDE 6 -->
+  <div class="slide">
+
+    <div class="card success">
+
+      <div class="success-icon">
+        ✓
+      </div>
+
+      <div class="small-title">
+        Aspirasi Terkirim
+      </div>
+
+      <h2>
+        Terima kasih sudah bersuara.
+      </h2>
+
+      <p class="desc">
+        Aspirasi kamu sudah berhasil kami terima.
+        Terima kasih sudah meluangkan waktu untuk
+        menyampaikan pendapat dan ikut membantu
+        membuat sekolah menjadi lebih baik.
+        <br><br>
+        <b>Suaramu berarti. ✦</b>
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="footer">
+    Aspirasi siswa • Sampaikan dengan jujur, sopan, dan membangun.
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   GOOGLE APPS SCRIPT
+========================================= */
+
+const SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbxe6IIK682kqaZmSOeeuX-EXDK3E_BAEEIKuDg_jqicwUs_QcvELlh5Au_xNwQRIAEnOw/exec";
+
+
+/* =========================================
+   ELEMENT
+========================================= */
+
+const slides =
+  document.querySelectorAll(".slide");
+
+const progressBar =
+  document.getElementById("progressBar");
+
+const progressText =
+  document.getElementById("progressText");
+
+const aspirasi =
+  document.getElementById("aspirasi");
+
+const counter =
+  document.getElementById("counter");
+
+const submitButton =
+  document.getElementById("submitButton");
+
+const errorSubmit =
+  document.getElementById("errorSubmit");
+
+
+let currentSlide = 0;
+
+
+/* =========================================
+   UPDATE SLIDE
+========================================= */
+
+function updateSlide() {
+
+  slides.forEach(function(slide, index) {
+
+    slide.classList.toggle(
+      "active",
+      index === currentSlide
+    );
+
+  });
+
+
+  if (currentSlide === 0) {
+
+    progressText.textContent = "1 / 5";
+
+    progressBar.style.width = "0%";
+
+  }
+
+  else if (currentSlide === 5) {
+
+    progressText.textContent = "✓";
+
+    progressBar.style.width = "100%";
+
+  }
+
+  else {
+
+    progressText.textContent =
+      currentSlide + " / 5";
+
+    progressBar.style.width =
+      ((currentSlide / 5) * 100) + "%";
+
+  }
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+/* =========================================
+   NEXT SLIDE
+========================================= */
+
+function nextSlide() {
+
+  if (currentSlide < slides.length - 1) {
+
+    currentSlide++;
+
+    updateSlide();
+
+  }
+
+}
+
+
+/* =========================================
+   PREVIOUS SLIDE
+========================================= */
+
+function prevSlide() {
+
+  if (currentSlide > 0) {
+
+    currentSlide--;
+
+    updateSlide();
+
+  }
+
+}
+
+
+/* =========================================
+   CEK NAMA
+========================================= */
+
+function checkNama() {
+
+  const nama =
+    document.getElementById("nama");
+
+  const error =
+    document.getElementById("errorNama");
+
+
+  if (nama.value.trim() === "") {
+
+    error.classList.add("show");
+
+    nama.focus();
+
+    return;
+
+  }
+
+
+  error.classList.remove("show");
+
+  nextSlide();
+
+}
+
+
+/* =========================================
+   CEK KELAS
+========================================= */
+
+function checkKelas() {
+
+  const kelas =
+    document.getElementById("kelas");
+
+  const error =
+    document.getElementById("errorKelas");
+
+
+  if (kelas.value.trim() === "") {
+
+    error.classList.add("show");
+
+    kelas.focus();
+
+    return;
+
+  }
+
+
+  error.classList.remove("show");
+
+  nextSlide();
+
+}
+
+
+/* =========================================
+   CEK JENIS
+========================================= */
+
+function checkJenis() {
+
+  const selected =
+    document.querySelector(
+      'input[name="jenis"]:checked'
+    );
+
+  const error =
+    document.getElementById("errorJenis");
+
+
+  if (!selected) {
+
+    error.classList.add("show");
+
+    return;
+
+  }
+
+
+  error.classList.remove("show");
+
+  nextSlide();
+
+}
+
+
+/* =========================================
+   COUNTER TEXTAREA
+========================================= */
+
+aspirasi.addEventListener(
+  "input",
+  function() {
+
+    counter.textContent =
+      aspirasi.value.length;
+
+  }
+);
+
+
+/* =========================================
+   SUBMIT
+========================================= */
+
+async function submitForm() {
+
+  const nama =
+    document
+      .getElementById("nama")
+      .value
+      .trim();
+
+
+  const kelas =
+    document
+      .getElementById("kelas")
+      .value
+      .trim();
+
+
+  const selected =
+    document.querySelector(
+      'input[name="jenis"]:checked'
+    );
+
+
+  const isi =
+    document
+      .getElementById("aspirasi")
+      .value
+      .trim();
+
+
+  const errorAspirasi =
+    document.getElementById(
+      "errorAspirasi"
+    );
+
+
+  /* Cek nama */
+
+  if (!nama) {
+
+    currentSlide = 1;
+
+    updateSlide();
+
+    return;
+
+  }
+
+
+  /* Cek kelas */
+
+  if (!kelas) {
+
+    currentSlide = 2;
+
+    updateSlide();
+
+    return;
+
+  }
+
+
+  /* Cek jenis */
+
+  if (!selected) {
+
+    currentSlide = 3;
+
+    updateSlide();
+
+    return;
+
+  }
+
+
+  /* Cek isi */
+
+  if (!isi) {
+
+    errorAspirasi.classList.add(
+      "show"
+    );
+
+    aspirasi.focus();
+
+    return;
+
+  }
+
+
+  errorAspirasi.classList.remove(
+    "show"
+  );
+
+
+  errorSubmit.classList.remove(
+    "show"
+  );
+
+
+  /* Cek URL */
+
+  if (!SCRIPT_URL) {
+
+    alert(
+      "URL Google Apps Script belum dimasukkan."
+    );
+
+    return;
+
+  }
+
+
+  /* Data yang dikirim */
+
+  const data = {
+
+    nama: nama,
+
+    kelas: kelas,
+
+    jenis: selected.value,
+
+    aspirasi: isi
+
+  };
+
+
+  /* Ubah tombol */
+
+  submitButton.disabled = true;
+
+  submitButton.textContent =
+    "Mengirim...";
+
+
+  try {
+
+    await fetch(
+      SCRIPT_URL,
+      {
+        method: "POST",
+
+        mode: "no-cors",
+
+        headers: {
+          "Content-Type":
+            "text/plain;charset=utf-8"
+        },
+
+        body: JSON.stringify(data)
+
+      }
+    );
+
+
+    /*
+      Karena menggunakan no-cors,
+      browser tidak bisa membaca response
+      dari Apps Script.
+
+      Setelah request terkirim,
+      tampilkan halaman sukses.
+    */
+
+    currentSlide = 5;
+
+    updateSlide();
+
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Error:",
+      error
+    );
+
+
+    errorSubmit.classList.add(
+      "show"
+    );
+
+
+    submitButton.disabled = false;
+
+    submitButton.textContent =
+      "Kirim Aspirasi ✓";
+
+  }
+
+}
+
+
+/* =========================================
+   MULAI
+========================================= */
+
+updateSlide();
+
+</script>
+
+</body>
+</html>

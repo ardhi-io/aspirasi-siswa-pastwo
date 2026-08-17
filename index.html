@@ -907,26 +907,50 @@ async function submitForm() {
 
 
   if (
-    !SCRIPT_URL ||
-    SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbxe6IIK682kqaZmSOeeuX-EXDK3E_BAEEIKuDg_jqicwUs_QcvELlh5Au_xNwQRIAEnOw/exec")
-  ) {
+    const SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbxe6IIK682kqaZmSOeeuX-EXDK3E_BAEEIKuDg_jqicwUs_QcvELlh5Au_xNwQRIAEnOw/exec";
 
-    alert(
-      "https://script.google.com/macros/s/AKfycbxe6IIK682kqaZmSOeeuX-EXDK3E_BAEEIKuDg_jqicwUs_QcvELlh5Au_xNwQRIAEnOw/exec"
+
+async function submitForm() {
+
+  const nama =
+    document.getElementById("nama").value.trim();
+
+  const kelas =
+    document.getElementById("kelas").value.trim();
+
+  const selected =
+    document.querySelector(
+      'input[name="jenis"]:checked'
     );
 
-    return;
+  const isi =
+    document.getElementById("aspirasi").value.trim();
 
+  const errorAspirasi =
+    document.getElementById("errorAspirasi");
+
+  const errorSubmit =
+    document.getElementById("errorSubmit");
+
+  const submitButton =
+    document.getElementById("submitButton");
+
+
+  if (!nama || !kelas || !selected || !isi) {
+
+    errorAspirasi.classList.add("show");
+
+    return;
   }
 
 
-  submitButton.disabled = true;
+  if (!SCRIPT_URL) {
 
-  submitButton.innerText =
-    "Mengirim...";
+    alert("URL Google Apps Script belum dimasukkan.");
 
-
-  errorSubmit.classList.remove("show");
+    return;
+  }
 
 
   const data = {
@@ -935,13 +959,17 @@ async function submitForm() {
 
     kelas: kelas,
 
-    jenis: selected
-      ? selected.value
-      : "",
+    jenis: selected.value,
 
     aspirasi: isi
 
   };
+
+
+  submitButton.disabled = true;
+
+  submitButton.innerText =
+    "Mengirim...";
 
 
   try {
@@ -963,23 +991,12 @@ async function submitForm() {
     );
 
 
-    /*
-      Karena mode no-cors digunakan agar GitHub Pages
-      dapat mengirim ke Google Apps Script, browser
-      tidak dapat membaca response dari server.
-
-      Setelah request berhasil dikirim, kita tampilkan
-      halaman sukses.
-    */
-
     currentSlide = 5;
 
     updateSlide();
 
 
-  }
-
-  catch (error) {
+  } catch (error) {
 
     console.error(error);
 
@@ -993,11 +1010,3 @@ async function submitForm() {
   }
 
 }
-
-
-updateSlide();
-
-</script>
-
-</body>
-</html>

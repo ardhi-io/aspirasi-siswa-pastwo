@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aspirasi Siswa</title>
+  <meta name="theme-color" content="#081a35" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --navy: #081a35;
+      --navy-2: #0d274d;
+      --blue: #1e5aa8;
+      --blue-light: #7fb3ff;
+      --white: #f7faff;
+      --muted: #aabbd3;
+      --line: rgba(255,255,255,.12);
+      --card: rgba(255,255,255,.07);
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 85% 10%, rgba(57, 124, 220, .22), transparent 28%),
+        radial-gradient(circle at 10% 90%, rgba(30, 90, 168, .20), transparent 30%),
+        linear-gradient(145deg, #061329, var(--navy) 55%, #0b2345);
+      overflow-x: hidden;
+    }
+
+    .bg-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: .22;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb-1 {
+      width: 180px;
+      height: 180px;
+      background: #3c8cff;
+      top: -70px;
+      right: -50px;
+    }
+
+    .orb-2 {
+      width: 150px;
+      height: 150px;
+      background: #174b91;
+      bottom: -50px;
+      left: -40px;
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 620px);
+      min-height: 100vh;
+      margin: auto;
+      padding: 24px 18px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .4px;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.06);
+      font-size: 17px;
+    }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .progress {
+      width: 80px;
+      height: 5px;
+      background: rgba(255,255,255,.10);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--blue-light);
+      border-radius: inherit;
+      transition: width .35s ease;
+    }
+
+    .slides {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      animation: slideIn .35s ease;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 25px;
+      padding: 30px 25px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.20);
+      backdrop-filter: blur(14px);
+    }
+
+    .welcome-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      background: rgba(93, 153, 235, .14);
+      border: 1px solid rgba(127,179,255,.20);
+      font-size: 29px;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow {
+      color: var(--blue-light);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      margin-bottom: 9px;
+    }
+
+    h1 {
+      font-size: clamp(31px, 8vw, 48px);
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-size: clamp(24px, 6vw, 34px);
+      line-height: 1.15;
+      letter-spacing: -.7px;
+      margin-bottom: 11px;
+    }
+
+    .description {
+      color: #c3d0e3;
+      font-size: 15px;
+      line-height: 1.75;
+      margin-bottom: 24px;
+    }
+
+    .note {
+      border-left: 2px solid var(--blue-light);
+      padding: 5px 0 5px 13px;
+      color: #d9e5f5;
+      font-size: 13px;
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      color: #dfe9f7;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.13);
+      outline: none;
+      border-radius: 14px;
+      padding: 15px 16px;
+      color: white;
+      background: rgba(0,0,0,.15);
+      font: inherit;
+      transition: .2s ease;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #7890ad;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: rgba(127,179,255,.75);
+      box-shadow: 0 0 0 4px rgba(82,145,226,.10);
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option {
+      position: relative;
+    }
+
+    .option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .option label {
+      cursor: pointer;
+      margin: 0;
+      padding: 15px 16px;
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 14px;
+      background: rgba(0,0,0,.12);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      transition: .2s ease;
+    }
+
+    .radio {
+      width: 19px;
+      height: 19px;
+      border: 1.5px solid #8298b4;
+      border-radius: 50%;
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .option input:checked + label {
+      border-color: rgba(127,179,255,.7);
+      background: rgba(51,115,194,.18);
+    }
+
+    .option input:checked + label .radio {
+      border-color: var(--blue-light);
+    }
+
+    .option input:checked + label .radio::after {
+      content: "";
+      width: 9px;
+      height: 9px;
+      background: var(--blue-light);
+      border-radius: 50%;
+      position: absolute;
+      inset: 0;
+      margin: auto;
+    }
+
+    .counter {
+      margin-top: 8px;
+      text-align: right;
+      color: #7088a5;
+      font-size: 11px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 800;
+      border-radius: 13px;
+      padding: 14px 18px;
+      transition: transform .15s ease, opacity .15s ease, background .15s ease;
+    }
+
+    button:active {
+      transform: scale(.97);
+    }
+
+    .btn-back {
+      color: #c5d4e7;
+      background: rgba(255,255,255,.07);
+      border: 1px solid var(--line);
+    }
+
+    .btn-next,
+    .btn-submit {
+      flex: 1;
+      color: #fff;
+      background: linear-gradient(135deg, #1e5aa8, #3276c8);
+      box-shadow: 0 10px 25px rgba(23,87,160,.25);
+    }
+
+    .btn-next:hover,
+    .btn-submit:hover {
+      opacity: .92;
+    }
+
+    .error {
+      display: none;
+      color: #ffb9b9;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+
+    .error.show {
+      display: block;
+    }
+
+    .success {
+      text-align: center;
+      padding: 18px 0 4px;
+    }
+
+    .success-icon {
+      width: 74px;
+      height: 74px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: rgba(95, 173, 255, .14);
+      border: 1px solid rgba(127,179,255,.25);
+      font-size: 31px;
+    }
+
+    .footer {
+      text-align: center;
+      color: #657d9b;
+      font-size: 11px;
+      line-height: 1.6;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 430px) {
+      .app {
+        padding: 18px 14px;
+      }
+
+      .card {
+        padding: 25px 20px;
+        border-radius: 21px;
+      }
+
+      .progress {
+        width: 58px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+
+  <main class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-icon">✦</div>
+        <span>ASPIRASI SISWA</span>
+      </div>
+
+      <div class="progress-wrap">
+        <span id="progressText">1 / 5</span>
+        <div class="progress">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
+    </div>
+
+    <section class="slides">
+
+      <!-- SLIDE 1 -->
+      <div class="slide active">
+        <div class="card">
+          <div class="welcome-icon">✎</div>
+          <div class="eyebrow">Ruang Suara Siswa</div>
+          <h1>Aspirasi Siswa</h1>
+          <p class="description">
+            Suara kalian adalah bagian penting dalam kemajuan sekolah.
+            Sampaikan aspirasi, saran, kritik, maupun ide kalian melalui
+            halaman ini.
+          </p>
+
+          <div class="note">
+            Setiap aspirasi akan diterima dan dipertimbangkan sebagai bahan
+            evaluasi untuk menciptakan lingkungan sekolah yang lebih baik.
+          </div>
+
+          <p class="description" style="margin-bottom:0">
+            Yuk, sampaikan dengan jujur, sopan, dan membangun.
+            <br><br>
+            <strong>OSIS & MPK siap mendengarkan.</strong>
+          </p>
+
+          <div class="actions">
+            <button class="btn-next" onclick="nextSlide()">Mulai Mengisi →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 2 -->
+      <div class="slide">
+        <div class="card">
+          <div class="eyebrow">Pertanyaan 01</div>
+          <h2>Siapa kamu?</h2>
+          <p class="description">Isi nama kamu supaya kami tahu siapa yang menyampaikan aspirasi.</p>
+
+          <label for="nama">Nama <span style="color:#7fb3ff">*</span></label>
+          <input id="nama" type="text" placeholder="Tulis nama kamu..." autocomplete="name" />
+
+          <div class="error" id="errorNama">Nama belum diisi.</div>
+
+          <div class="actions">
+            <button class="btn-back" onclick="prevSlide()">←</button>
+            <button class="btn-next" onclick="validateAndNext('nama','errorNama')">Lanjut →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 3 -->
+      <div class="slide">
+        <div class="card">
+          <div class="eyebrow">Pertanyaan 02</div>
+          <h2>Kamu dari kelas mana?</h2>
+          <p class="description">Masukkan kelas kamu dengan format yang biasa digunakan di sekolah.</p>
+
+          <label for="kelas">Kelas <span style="color:#7fb3ff">*</span></label>
+          <input id="kelas" type="text" placeholder="Contoh: XI RPL 1" />
+
+          <div class="error" id="errorKelas">Kelas belum diisi.</div>
+
+          <div class="actions">
+            <button class="btn-back" onclick="prevSlide()">←</button>
+            <button class="btn-next" onclick="validateAndNext('kelas','errorKelas')">Lanjut →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 4 -->
+      <div class="slide">
+        <div class="card">
+          <div class="eyebrow">Pertanyaan 03</div>
+          <h2>Apa jenis aspirasinya?</h2>
+          <p class="description">Pilih kategori yang paling sesuai dengan isi aspirasi kamu.</p>
+
+          <div class="options">
+            <div class="option">
+              <input type="radio" name="jenis" id="saran" value="Saran">
+              <label for="saran"><span class="radio"></span>Saran</label>
+            </div>
+
+            <div class="option">
+              <input type="radio" name="jenis" id="keluhan" value="Keluhan">
+              <label for="keluhan"><span class="radio"></span>Keluhan</label>
+            </div>
+
+            <div class="option">
+              <input type="radio" name="jenis" id="kritik" value="Kritik">
+              <label for="kritik"><span class="radio"></span>Kritik</label>
+            </div>
+
+            <div class="option">
+              <input type="radio" name="jenis" id="ide" value="Ide kegiatan">
+              <label for="ide"><span class="radio"></span>Ide kegiatan</label>
+            </div>
+
+            <div class="option">
+              <input type="radio" name="jenis" id="lainnya" value="Lainnya">
+              <label for="lainnya"><span class="radio"></span>Lainnya</label>
+            </div>
+          </div>
+
+          <div class="error" id="errorJenis">Pilih salah satu kategori terlebih dahulu.</div>
+
+          <div class="actions">
+            <button class="btn-back" onclick="prevSlide()">←</button>
+            <button class="btn-next" onclick="validateJenis()">Lanjut →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5 -->
+      <div class="slide">
+        <div class="card">
+          <div class="eyebrow">Pertanyaan 04</div>
+          <h2>Apa aspirasimu?</h2>
+          <p class="description">
+            Ceritakan dengan jelas. Kritik boleh, keluhan boleh, ide juga boleh—
+            yang penting tetap sopan dan membangun.
+          </p>
+
+          <label for="isi">Isi aspirasi <span style="color:#7fb3ff">*</span></label>
+          <textarea id="isi" maxlength="1000" placeholder="Tulis aspirasi kamu di sini..."></textarea>
+          <div class="counter"><span id="count">0</span> / 1000</div>
+
+          <div class="error" id="errorIsi">Isi aspirasi belum ditulis.</div>
+
+          <div class="actions">
+            <button class="btn-back" onclick="prevSlide()">←</button>
+            <button class="btn-submit" onclick="submitForm()">Kirim Aspirasi ✓</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="slide">
+        <div class="card success">
+          <div class="success-icon">✓</div>
+          <div class="eyebrow">Berhasil</div>
+          <h2>Terima kasih sudah bersuara.</h2>
+          <p class="description">
+            Aspirasi kamu sudah selesai diisi. Semoga suara kecil ini bisa
+            ikut membawa perubahan yang lebih baik untuk sekolah.
+          </p>
+          <button class="btn-next" onclick="location.reload()">Isi Lagi</button>
+        </div>
+      </div>
+
+    </section>
+
+    <div class="footer">
+      Aspirasi siswa • Sampaikan dengan jujur, sopan, dan membangun.
+    </div>
+  </main>
+
+  <script>
+    const slides = document.querySelectorAll(".slide");
+    const progressBar = document.getElementById("progressBar");
+    const progressText = document.getElementById("progressText");
+    const count = document.getElementById("count");
+    const isi = document.getElementById("isi");
+
+    let current = 0;
+
+    function updateSlide() {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle("active", index === current);
+      });
+
+      // Slide 0 = opening, slide 1-4 = pertanyaan, slide 5 = selesai
+      const visibleStep = current === 0 ? 1 : current === 5 ? 5 : current;
+      progressText.textContent = current === 5 ? "✓" : visibleStep + " / 5";
+
+      const percentage = current === 0
+        ? 0
+        : current === 5
+          ? 100
+          : ((current) / 5) * 100;
+
+      progressBar.style.width = percentage + "%";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function nextSlide() {
+      if (current < slides.length - 1) {
+        current++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (current > 0) {
+        current--;
+        updateSlide();
+      }
+    }
+
+    function validateAndNext(inputId, errorId) {
+      const input = document.getElementById(inputId);
+      const error = document.getElementById(errorId);
+
+      if (!input.value.trim()) {
+        error.classList.add("show");
+        input.focus();
+        return;
+      }
+
+      error.classList.remove("show");
+      nextSlide();
+    }
+
+    function validateJenis() {
+      const selected = document.querySelector('input[name="jenis"]:checked');
+      const error = document.getElementById("errorJenis");
+
+      if (!selected) {
+        error.classList.add("show");
+        return;
+      }
+
+      error.classList.remove("show");
+      nextSlide();
+    }
+
+    isi.addEventListener("input", () => {
+      count.textContent = isi.value.length;
+    });
+
+    function submitForm() {
+      const error = document.getElementById("errorIsi");
+
+      if (!isi.value.trim()) {
+        error.classList.add("show");
+        isi.focus();
+        return;
+      }
+
+      error.classList.remove("show");
+
+      /*
+        CATATAN:
+        GitHub Pages hanya menjalankan HTML/CSS/JavaScript.
+        Jadi tombol ini belum mengirim data ke database.
+        Kalau ingin aspirasi benar-benar masuk ke Google Sheets,
+        Formspree, Apps Script, atau backend lain, bagian submit
+        bisa disambungkan nanti.
+      */
+
+      current = 5;
+      updateSlide();
+    }
+
+    updateSlide();
+  </script>
+</body>
+</html>
